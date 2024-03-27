@@ -1,0 +1,29 @@
+{
+  "name": "video-player-mode",
+  "description": "Webcomponent video-player-mode following open-wc recommendations",
+  "license": "MIT",
+  "author": "video-player-mode",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "index.js",
+  "module": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./video-player-mode.js": "./video-player-mode.js"
+  },
+  "scripts": {
+    "analyze": "cem analyze --litelement",
+    "start": "web-dev-server"
+  },
+  "dependencies": {
+    "@lrnwebcomponents/hax-iconset": "^8.0.2",
+    "@lrnwebcomponents/simple-icon": "^8.0.2",
+    "@lrnwebcomponents/video-player": "^8.0.2",
+    "lit": "^2.0.2"
+  },
+  "devDependencies": {
+    "@custom-elements-manifest/analyzer": "^0.4.17",
+    "@web/dev-server": "^0.1.34"
+  },
+  "customElements": "custom-elements.json"
+}

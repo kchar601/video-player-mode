@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "index.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "VideoPlayerMode",
+          "declaration": {
+            "name": "VideoPlayerMode",
+            "module": "./src/VideoPlayerMode.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "video-player-mode.js",
+      "declarations": [],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "video-player-mode",
+          "declaration": {
+            "name": "VideoPlayerMode",
+            "module": "/src/VideoPlayerMode.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/VideoPlayerMode.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "VideoPlayerMode",
+          "members": [
+            {
+              "kind": "method",
+              "name": "__increment"
+            },
+            {
+              "kind": "field",
+              "name": "header",
+              "type": {
+                "text": "string"
+              },
+              "default": "'Hey there'",
+              "privacy": "public",
+              "attribute": "header"
+            },
+            {
+              "kind": "field",
+              "name": "counter",
+              "type": {
+                "text": "number"
+              },
+              "default": "5",
+              "privacy": "public",
+              "attribute": "counter"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "header",
+              "fieldName": "header"
+            },
+            {
+              "name": "counter",
+              "fieldName": "counter"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "video-player-mode",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "VideoPlayerMode",
+          "declaration": {
+            "name": "VideoPlayerMode",
+            "module": "src/VideoPlayerMode.js"
+          }
+        }
+      ]
+    }
+  ]
+}

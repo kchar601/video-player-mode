@@ -42,7 +42,6 @@ export class VideoPlayerMode extends LitElement {
       display: grid;
       grid-template-columns: .5fr 4fr .5fr;
       gap: 16px;
-      max-height: 160px;
     }
 
     .timestamp-navigation-button{
@@ -53,27 +52,57 @@ export class VideoPlayerMode extends LitElement {
       margin: auto;
     }
     
+    .timestampBtn.active{
+      background: #dfedf5;
+    }
   `;
 
   static properties = {
     header: { type: String },
     counter: { type: Number },
+    activeIndex: { type: String }
   };
 
   constructor() {
     super();
-    this.activeIndex = 0;
+    this.activeIndex = "";
+    this.videoPlayer;
+    this.goTimestamp = this.goTimestamp.bind(this);
+    this.updateJumbotron = this.updateJumbotron.bind(this);
+  }
+
+  firstUpdated() {
+    console.log("firstUpdated");
+    this.videoPlayer = this.shadowRoot.querySelector('video-player');
+    console.log(this.videoPlayer); // should not be undefined now
+  }
+
+  updated(changedProperties) {
+    changedProperties.forEach((oldValue, propName) => {
+      console.log(`${propName} changed. oldValue: ${oldValue}`);
+      if (propName == "activeIndex") {
+        this.shadowRoot.querySelectorAll(".timestampBtn").forEach((btn) => {
+          console.log("add active");
+          if (btn.id.split("-")[1] == this.activeIndex) {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
+        });
+        this.updateJumbotron();
+      }
+    });
   }
 
   render() {
     return html`
       <div class="videoSection">
-        <video-player source="https://www.youtube.com/watch?v=-MTSQjw5DrM" source-type="youtube"></video-player>
+        <video-player id="video-player-target" source="https://www.youtube.com/watch?v=-MTSQjw5DrM" source-type="youtube"></video-player>
         <div class="jumbotron">
           <button @click="${this.goPrevTimestamp}" class="timestamp-navigation-button"><simple-icon-lite icon="lrn:arrow-left"></simple-icon-lite></button>
           <div>
-            <h3>Timestamp 1</h3>
-            <p>Timestamp 1 description</p>
+            <h3 id="jumbotron-Header">Timestamp 1</h3>
+            <p id="jumbotron-desc">Timestamp 1 description</p>
             <button @click="${this.scan}">Scan</button>
           </div>
           <button @click="${this.goNextTimestamp}" class="timestamp-navigation-button"><simple-icon-lite icon="lrn:arrow-right"></simple-icon-lite></button>
@@ -85,21 +114,25 @@ export class VideoPlayerMode extends LitElement {
   }
 
   scan(){
+    this.shadowRoot.querySelector(".timestampList").innerHTML = "";
     console.log("scan");
+    let counter = 0;
     document.querySelectorAll("video-player-flag").forEach((flag) => {
       console.log(flag.timestamp);
       flag.onclick = () => {
         console.log(flag.timestamp);
       };
+      flag.id = "timestamp-" + counter;
       var timestampBtn = document.createElement("button");
+      timestampBtn.id = "timestampBtn-" + counter;
       timestampBtn.innerHTML = flag.outerHTML;
-      timestampBtn.onclick = () => {
-          console.log(flag.timestamp);
-      };
+      timestampBtn.onclick = this.goTimestamp;
       timestampBtn.classList.add("timestampBtn");
+      timestampBtn.timestamp = flag.timestamp;
       this.shadowRoot.querySelector(".timestampList").appendChild(timestampBtn);
+      counter++;
     });
-}
+  }
 
   goPrevTimestamp(){
     console.log("goPrevTimestamp");
@@ -109,7 +142,24 @@ export class VideoPlayerMode extends LitElement {
     console.log("goNextTimestamp");
   }
 
-  goTimestamp(){
-    console.log("goTimestamp");
+  goTimestamp(e){
+    this.videoPlayer.shadowRoot.querySelector("a11y-media-player").seek(e.target.timestamp);
+    this.videoPlayer.shadowRoot.querySelector("a11y-media-player").play();
+    this.activeIndex = e.target.id;
+    console.log(this.activeIndex);
   }
+
+  updateJumbotron(){
+    console.log("updateJumbotron");
+    this.shadowRoot.querySelector("#jumbotron-Header").innerText = this.shadowRoot.getElementById(this.activeIndex).header;
+    let activeButtonId = this.activeIndex;
+    let flagId = "timestamp-" + activeButtonId.split("-")[1];
+    let flag = document.getElementById(flagId);
+    if (flag) {
+        let parentElement = flag.parentNode;
+        if (parentElement) {
+            this.shadowRoot.querySelector("#jumbotron-desc").innerHTML = parentElement.innerHTML;
+        }
+    }
+}
 }
